@@ -93,13 +93,16 @@ async function useModel(image) {
     
     // ปรับขนาดรูปภาพเพื่อให้มีขนาดที่ถูกต้อง (224x224)
     const resizedImgTensor = tf.image.resizeBilinear(imgTensor, [224, 224]);
-    
+
     // เพิ่มมิติที่สี่
     const expandedImgTensor = resizedImgTensor.expandDims(0);
     //console.log(resizedImgTensor);
-    
+
+    // ทำการ normalize ค่าพิกเซลให้อยู่ในช่วง [0, 1]
+    const normalizedImgTensor = expandedImgTensor.div(255.0);
+
     // ส่งข้อมูลรูปภาพไปให้โมเดล
-    const predictions = model.predict(expandedImgTensor);
+    const predictions = model.predict(normalizedImgTensor);
     
     // แสดงผลลัพธ์ที่ได้
     console.log(predictions);
@@ -107,7 +110,7 @@ async function useModel(image) {
 }
 
 function classLabels(isLabel) {
-    const labels = ['MildDemented', 'ModerateDemented', 'NonDemented','VeryMildDemented'];
+    const labels = ['MildDemented', 'ModerateDemented', 'NonDemented', 'VeryMildDemented'];
     /*const predictionsData = isLabel.dataSync();
     // console.log(predictionsData);
         
