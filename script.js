@@ -2,6 +2,8 @@ const dragArea = document.querySelector('.drag-area');
 const dragText = document.querySelector('.header-dnd');
 let button = document.querySelector('.button');
 let input = document.querySelector('input');
+let output = document.querySelector('.textoutput');
+let btColor = document.querySelector('.output .white-btline');
 let file;
 let model;
 loadModel();
@@ -87,6 +89,22 @@ function displayFile() {
         fileReader.readAsDataURL(file);
     }
 }
+
+function changeColor(index) {
+    if (index === 0) {
+        btColor.setAttribute('class', 'yellow-btline');
+    }
+    if (index === 1) {
+        btColor.setAttribute('class', 'red-btline');
+    }
+    if (index === 2) {
+        btColor.setAttribute('class', 'white-btline');
+    }
+    if (index === 3) {
+        btColor.setAttribute('class', 'green-btline');
+    }
+}
+
 async function useModel(image) {
     // เตรียมรูปภาพเพื่อใช้ในโมเดล
     const imgTensor = tf.browser.fromPixels(image);
@@ -119,4 +137,6 @@ function classLabels(isLabel) {
     let maxPrediction = tf.argMax(isLabel, 1).dataSync()[0]
     console.log(maxPrediction);
     console.log(labels[maxPrediction]);
+    output.innerHTML = labels[maxPrediction];
+    changeColor(maxPrediction);
 }
